@@ -6,6 +6,7 @@ import responses
 import json
 from pet.models import Pet
 from django.core.exceptions import PermissionDenied
+import datetime
 
 
 with describe('A Pet'):
@@ -27,3 +28,9 @@ with describe('A Pet'):
                with assert_raises(PermissionDenied):
                     p.alive = True
                     p.save()
+          with it('should not be able to eat'):
+               p = Pet(name="Test", alive=False)
+               with assert_raises(PermissionDenied):
+                    p.fedLast = datetime.datetime.now()
+                    p.save()
+
