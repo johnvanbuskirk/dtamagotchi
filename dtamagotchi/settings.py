@@ -110,4 +110,3 @@ REST_FRAMEWORK = {
 }
 
 TEST_RUNNER = 'dtamagotchi.mamba_runner.MambaSpecRunner'
-
