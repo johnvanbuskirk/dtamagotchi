@@ -28,7 +28,16 @@ with describe('A Pet'):
         with it('should not feel neglected if fed in the last 24 hours'):
             p = Pet(name="Test", last_fed=timezone.now() - timedelta(hours=12))
             eq_(p.neglected, False)
-
+        with it('should not learn tricks if dumb'):
+            p = Pet(name="Test", iq=55)
+            eq_(p.learns_tricks, False)
+        with it('should do tricks if not dumb'):
+            p = Pet(name="Test", iq=90)
+            p.save()
+            eq_(p.learns_tricks, True)
+        with it('should not learn tricks if too damn smart'):
+            p = Pet(name="Test", iq=148)
+            eq_(p.learns_tricks, False)
     with describe('when dead'):
         with it('should not come back to life'):
             p = Pet(name="Test", alive=False)

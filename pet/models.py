@@ -1,13 +1,14 @@
+from random import randint
 from django.db import models
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
-
 
 class Pet(models.Model):
     alive = models.BooleanField(default=True)
     name = models.CharField(max_length=80)
     birth_date = models.DateField(auto_now_add=True)
     last_fed = models.DateTimeField(null=True, blank=True, auto_now_add=True)
+    iq = models.IntegerField(blank=False, default=randint(50,150))
 
     def __unicode__(self):
         return ("%s is %s and was born on %s") % (self.name, "alive" if self.alive else "dead". str(self.date))
@@ -29,3 +30,10 @@ class Pet(models.Model):
             return True
         else:
             return False
+
+    @property
+    def learns_tricks(self, *args, **kwargs):
+        if self.iq < 85 or self.iq > 145 or self.neglected:
+            return False
+        else:
+            return True
