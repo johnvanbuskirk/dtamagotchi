@@ -6,8 +6,8 @@ import responses
 import json
 from pet.models import Pet
 from django.core.exceptions import PermissionDenied
-import datetime
-
+from datetime import date, timedelta
+from django.utils import timezone
 
 with describe('A Pet'):
     with it('should instantiate'):
@@ -22,6 +22,13 @@ with describe('A Pet'):
             p = Pet(name="Test")
             p.alive = False
             ok_(p.alive == False)
+        with it('should feel neglected if not fed for 24 hours'):
+            p = Pet(name="Test", last_fed=timezone.now() - timedelta(hours=48))
+            eq_(p.neglected, True)
+        with it('should not feel neglected if fed in the last 24 hours'):
+            p = Pet(name="Test", last_fed=timezone.now() - timedelta(hours=12))
+            eq_(p.neglected, False)
+
     with describe('when dead'):
         with it('should not come back to life'):
             p = Pet(name="Test", alive=False)
@@ -31,5 +38,5 @@ with describe('A Pet'):
         with it('should not be able to eat'):
             p = Pet(name="Test", alive=False)
             with assert_raises(PermissionDenied):
-                p.fedLast = datetime.datetime.now()
+                p.fedLast = timezone.now()
                 p.save()
