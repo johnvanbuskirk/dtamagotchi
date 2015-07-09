@@ -6,6 +6,9 @@ from mamba import application_factory
 class MambaSpecRunner(DiscoverRunner):
 
     def run_tests(self, test_labels, extra_tests=None):
+        self.setup_test_environment()
+        old_config = self.setup_databases()
+
         parser = argparse.ArgumentParser()
         parser.add_argument('--version', '-v', default=False,
                             action='store_true', help='Display the version.')
@@ -26,5 +29,7 @@ class MambaSpecRunner(DiscoverRunner):
         factory = application_factory.ApplicationFactory(arguments)
         runner = factory.create_runner()
         runner.run()
+        self.teardown_databases(old_config)
+        self.teardown_test_environment()
         if runner.has_failed_examples:
             return runner.reporter.failed_count
